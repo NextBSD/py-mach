@@ -1,12 +1,14 @@
+RM ?= /bin/rm
 PYTHON ?= /usr/local/bin/python2.7
 PREFIX ?= /usr/local
 
 build:
 	${PYTHON} setup.py build
 
-install:
+install: build
 	${PYTHON} setup.py install --prefix ${PREFIX}
 
 clean:
-	rm -rf build
-	rm src/*.c
+	${PYTHON} setup.py clean
+	${RM} -rf build
+	${RM} src/*.c
