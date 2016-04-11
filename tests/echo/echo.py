@@ -30,6 +30,7 @@ import os
 import sys
 import launchd
 import subprocess
+import time
 from utils import fail
 
 
@@ -52,12 +53,17 @@ def main():
     # Start service
     try:
         l = launchd.Launchd()
+        print "Plist: ", PLIST
         l.load(PLIST)
     except OSError, e:
         fail('Cannot load launchd job: {0}', e)
-
+    
+    # XXX Ensure have enough time to start service (after loaded that) XXX
+    time.sleep(1)
+    
     # Ensure service is running
     job = l.jobs['org.freenas.test.mach.ipc-server']
+    print "Job: ", job
     if 'PID' not in job:
         l.unload('org.freenas.test.mach.ipc-server')
         fail('Service died')
