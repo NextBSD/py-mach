@@ -3,6 +3,9 @@ export ROOT=`pwd`
 export PYTHON=${PYTHON:-python2.7}
 export PYTHONPATH=${ROOT}/lib
 
+mkdir -p /tmp/mach_test_logs/
+export LOGPATH=/tmp/mach_test_logs/
+
 total_tests=0
 total_success=0
 total_failed=0
