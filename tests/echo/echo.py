@@ -73,6 +73,9 @@ def main():
         l.unload('org.freenas.test.mach.ipc-server')
         fail('Client failed')
 
+    # XXX Ensure have enough time to start service (after loaded that) XXX
+    time.sleep(1)
+
     # Stop service
     l.unload('org.freenas.test.mach.ipc-server')
 
