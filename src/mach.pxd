@@ -235,6 +235,7 @@ cdef extern from "mach/message.h" nogil:
 
 cdef extern from "mach/mach_init.h" nogil:
     mach_port_t mach_task_self()
+    mach_port_t mach_thread_self()
 
 cdef extern from "servers/bootstrap.h" nogil:
     enum:
@@ -246,3 +247,42 @@ cdef extern from "servers/bootstrap.h" nogil:
     kern_return_t bootstrap_create_service(mach_port_t bp, const name_t service_name, mach_port_t *sp)
     kern_return_t bootstrap_check_in(mach_port_t bp, const name_t service_name, mach_port_t *sp)
     kern_return_t bootstrap_look_up(mach_port_t bp, const name_t service_name, mach_port_t *sp)
+
+cdef extern from "mach/task.h" nogil:
+    ctypedef unsigned int uint32_t
+    ctypedef int int_32_t
+    ctypedef uint32_t natural_t
+    ctypedef int_32_t integer_t
+    ctypedef mach_port_t task_t
+    ctypedef mach_port_t task_port_t
+    ctypedef mach_port_t task_name_t
+    ctypedef mach_port_t *mach_port_array_t
+    ctypedef natural_t mach_msg_type_number_t
+    ctypedef mach_port_t ledger_t
+    ctypedef ledger_t *ledger_array_t
+    ctypedef natural_t task_flavor_t
+    ctypedef integer_t *task_info_t
+    ctypedef mach_port_t thread_t
+    ctypedef mach_port_t thread_act_t
+    ctypedef thread_act_t *thread_act_array_t
+    ctypedef int thread_state_flavor_t
+    ctypedef natural_t *thread_state_t
+
+    kern_return_t mach_ports_lookup(task_t target_task, mach_port_array_t *init_port_set,
+                                    mach_msg_type_number_t *init_port_setCnt)
+    kern_return_t mach_ports_register(task_t target_task, mach_port_array_t init_port_set,
+                                      mach_msg_type_number_t init_port_setCnt)
+
+    kern_return_t task_create(task_t target_task, ledger_array_t ledgers, mach_msg_type_number_t ledgersCnt,
+                              boolean_t inherit_memory, task_t *child_task)
+    kern_return_t task_info(task_name_t target_task, task_flavor_t flavor, task_info_t task_info_out,
+                            mach_msg_type_number_t *task_info_outCnt)
+    kern_return_t task_resume(task_t target_task)
+    kern_return_t task_sample(task_t task, mach_port_t reply)
+    kern_return_t task_suspend(task_t target_task)
+    kern_return_t task_terminate(task_t target_task)
+    kern_return_t task_threads(task_t target_task, thread_act_array_t *act_list, mach_msg_type_number_t *act_listCnt)
+
+    kern_return_t thread_create(task_t parent_task, thread_act_t *child_act)
+    kern_return_t thread_create_running(task_t parent_task, thread_state_flavor_t flavor, thread_state_t new_state,
+                                        mach_msg_type_number_t new_stateCnt, thread_act_t *child_act)
